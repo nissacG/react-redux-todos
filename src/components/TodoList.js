@@ -6,28 +6,34 @@ class TodoList extends Component {
     super(props)
 
     this.state = {
-      todos: ['eat', 'sleep'],
-      input: ''
+      todos: [],
+      todo: '',
+      id: 0
     }
   }
   
   handleSubmit = (e) => {
     e.preventDefault()
-    console.log(this.state.input)
+    let newTodos = [...this.state.todos]
+    newTodos.push(this.state.todo)
+    this.setState({
+      todos: newTodos
+    })
+    var form = document.getElementById('form')
+    form.reset()
   }
 
   handlechange = (e) => {
     this.setState({
-      input: e.target.value
+      todo: e.target.value
     })
-    console.log(this.state.input)
   }
 
   render() {
     let todolist = this.state.todos.map( (task, index) => <Todo task={task} key={index} /> )
     return (
       <div>
-        <form onSubmit={this.handleSubmit}>
+        <form id='form' onSubmit={this.handleSubmit}>
           <input type="text" onChange={this.handlechange}/>
           <button type="submit" >Submit</button>
         </form>
