@@ -14,13 +14,22 @@ class TodoList extends Component {
   
   handleSubmit = (e) => {
     e.preventDefault()
-    let newTodos = [...this.state.todos]
-    newTodos.push(this.state.todo)
-    this.setState({
-      todos: newTodos
-    })
-    var form = document.getElementById('form')
-    form.reset()
+    if (!this.state.todo) {
+      alert('You must enter a some text first!')
+    } else {
+      let newTodos = [...this.state.todos]
+      let newTodo = {content: this.state.todo, id: this.state.id}
+      let newId = this.state.id
+      newId++
+      newTodos.push(newTodo)
+      this.setState({
+        todos: newTodos,
+        id: newId,
+        todo: ''
+      })
+      var form = document.getElementById('form')
+      form.reset()
+    }
   }
 
   handlechange = (e) => {
@@ -29,15 +38,23 @@ class TodoList extends Component {
     })
   }
 
+  handleDelete = (id) =>{
+    let newTodos = this.state.todos.filter(item => item.id !== id)
+    this.setState({
+      todos: newTodos
+    })
+  }
+
   render() {
-    let todolist = this.state.todos.map( (task, index) => <Todo task={task} key={index} /> )
+    let todolist = this.state.todos[0]
+    ? this.state.todos.map( task => <Todo task={task.content} key={task.id} id={task.id} delete={this.handleDelete}/> )
+    : <Todo task={`No current todo's!`} />
     return (
       <div>
-        <form id='form' onSubmit={this.handleSubmit}>
-          <input type="text" onChange={this.handlechange}/>
-          <button type="submit" >Submit</button>
+        <form id='form' className='text-center mx-auto col-md-6 p-0' onSubmit={this.handleSubmit}>
+          <input type='text' className='form-control' onChange={this.handlechange} placeholder='Add Todo'/>
         </form>
-        <ul>
+        <ul className='col-md-6 mt-3 mx-auto text-secondary p-0'>
           { todolist }
         </ul>
       </div>
